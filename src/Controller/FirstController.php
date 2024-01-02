@@ -5,7 +5,7 @@ namespace App\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-class First
+class FirstController
 {
 //    Pour exécuter la méthode first de notre FirstController il
 //    faut appeler l'uri /first

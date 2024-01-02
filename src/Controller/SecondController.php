@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -15,6 +16,10 @@ class SecondController extends AbstractController
             'controller_name' => 'SecondController',
         ]);
     }
+    #[Route("/second/request", name:"app_test_request")]
+    public function request(Request $request): Response {
+        dd($request);
+    }
 
 //    Pour créer une fonctionnalité avec Symfony
 //    1- Créer une méthode dans une classe Controller
@@ -25,4 +30,15 @@ class SecondController extends AbstractController
     public function showParam($param, $param2): Response{
         dd($param, $param2);
     }
+
+    #[Route("/second/{name}", name:"app_bonjour")]
+    public function param(Request $request, $name): Response {
+        $groupe = $request->query->get('groupe');
+        return $this->render('first/param.html.twig', [
+            'name' => $name,
+            'groupe' => $groupe,
+        ]);
+    }
+
+
 }
