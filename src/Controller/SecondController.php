@@ -40,7 +40,7 @@ class SecondController extends AbstractController
         ]);
     }
 
-    #[Route("/cv/{name}/{firstname}/{age}/{section}", name:"app_cv")]
+    #[Route("/cv/{name?garban}/{firstname?Matthieu}/{age<\d+>?44}/{section?booster}", name:"app_cv")]
     public function cv($name, $firstname, $age, $section): Response {
 
         return $this->render('first/cv.html.twig', [
@@ -50,6 +50,4 @@ class SecondController extends AbstractController
             'section' => $section,
         ]);
     }
-
-
 }
