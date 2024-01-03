@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {#  asset pointe directement dans le dossier public   #}
+    <link rel="stylesheet" href="{{ asset('node_modules/bootstrap/dist/css/bootstrap.css') }}">
+    <title>Todo</title>
+</head>
+<body>
+
+<div class="container">
+    <table class="table">
+        <tr class="table-secondary">
+            <th>Firstname</th>
+            <th>Name</th>
+            <th>Age</th>
+        </tr>
+        <tbody>
+        {% for user in users %}
+            <tr class="table-{{ loop.index is odd ? 'warning':'danger' }}">
+                <th>{{ user.firstname }}</th>
+                <th>{{ user.name }}</th>
+                <th>{{ user.age }}</th>
+            </tr>
+        {% else %}
+            <tr colspan="3" class="table-danger">
+                Il n'y a aucun utilisateur
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>
