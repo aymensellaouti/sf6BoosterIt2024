@@ -1,17 +1,10 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    {#  asset pointe directement dans le dossier public   #}
-    <link rel="stylesheet" href="{{ asset('node_modules/bootstrap/dist/css/bootstrap.css') }}">
-    <title>Todo</title>
-</head>
-<body>
+{% extends 'layout.html.twig' %}
 
-<div class="container">
+{% block title %}
+    Users
+{% endblock %}
+{% block body %}
+    <div class="custom">My Own Css</div>
     <table class="table">
         <tr class="table-secondary">
             <th>Firstname</th>
@@ -33,7 +26,21 @@
         </tbody>
     </table>
 
-</div>
+{% endblock %}
 
-</body>
-</html>
+{% block styles %}
+{#
+    3 facons pour le css
+    1- Directement sur la balise : Le plusprioritaire
+    2- Dans un fichier style externe
+    3- Dabns la balise Style
+    Entre 2 et 3 le plus prioritaire est le dernier appelé
+#}
+    <style>
+        .custom {
+            background-color: #3b82f6;
+            color: #B0413E;
+        }
+    </style>
+
+{% endblock %}
