@@ -1,31 +1,10 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    {#  asset pointe directement dans le dossier public   #}
-    <link rel="stylesheet" href="{{ asset('node_modules/bootstrap/dist/css/bootstrap.css') }}">
-    <title>Todo</title>
-</head>
-<body>
-    <div class="container">
-        {% for message in app.flashes('infos') %}
-            <div class="alert alert-info">
-                {{ message }}
-            </div>
-        {% endfor %}
-        {% for message in app.flashes('error') %}
-            <div class="alert alert-danger">
-                {{ message }}
-            </div>
-        {% endfor %}
-        {% for message in app.flashes('success') %}
-            <div class="alert alert-success">
-                {{ message }}
-            </div>
-        {% endfor %}
+{% extends 'layout.html.twig' %}
+
+{% block title %}
+    Todo
+{% endblock %}
+
+{% block body %}
         <ol class="list-group">
             {% for todoName, todoValue in app.session.get('todos') %}
                 <li class="list-group-item">
@@ -33,6 +12,4 @@
                 </li>
             {% endfor %}
         </ol>
-    </div>
-</body>
-</html>
+{% endblock %}

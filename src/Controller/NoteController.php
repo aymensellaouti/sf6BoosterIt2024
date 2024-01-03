@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class NoteController extends AbstractController
 {
     #[Route('/note/{count<\d+>?5}', name: 'app_note')]
-    public function index($count): Response
+    public function index($count=5): Response
     {
         $notes = [];
         for ($i = 0; $i < $count; $i++) {

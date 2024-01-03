@@ -1,10 +1,11 @@
-{% extends 'layout.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}
     Users
 {% endblock %}
 {% block body %}
     <div class="custom">My Own Css</div>
+    {{ include ('fragments/hello.html.twig', {name: 'Booster IT'}) }}
     <table class="table">
         <tr class="table-secondary">
             <th>Firstname</th>
@@ -26,6 +27,12 @@
         </tbody>
     </table>
 
+    {% for user in users %}
+        {{ include ('fragments/hello.html.twig', {name: user.name}) }}
+    {% endfor %}
+
+    {{ render(controller('App\\Controller\\NoteController::index', {count: 10} )) }}
+    {{ render(controller('App\\Controller\\NoteController::index')) }}
 {% endblock %}
 
 {% block styles %}
