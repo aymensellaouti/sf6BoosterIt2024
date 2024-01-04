@@ -69,5 +69,18 @@ class PersonController extends AbstractController
             'person' => $person,
         ]);
     }
+    #[Route('/delete/{person}', name: 'app_person_delete')]
+    public function delete(Person $person = null): Response
+    {
+        if(!$person) {
+            throw new NotFoundHttpException("La person n'existe pas");
+        }
+
+        //     Je met l'opération de suppression dans la transaction
+        $this->entityManager->remove($person);
+        //        Exécuter la transaction
+        $this->entityManager->flush();
+        return new Response('<h1>Personne supprimé avec succès</h1>');
+    }
 
 }
