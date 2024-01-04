@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Person;
-use App\Entity\Product;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,13 +19,25 @@ class PersonController extends AbstractController
 //        Récupération du manager pour les opérations de persistance (create, update et delete)
         $this->entityManager = $this->managerRegistry->getManager();
 //        Récupération du répository pour les opérations de requétage de la base (read)
-        $this->repository = $this->managerRegistry->getRepository(Product::class);
+        $this->repository = $this->managerRegistry->getRepository(Person::class);
     }
-    #[Route('/', name: 'app_person')]
+    #[Route('/list', name: 'app_person')]
     public function index(): Response
     {
+//        Récupérer les personnes dans la base de données
+        $persons = $this->repository->findAll();
         return $this->render('person/index.html.twig', [
-            'controller_name' => 'PersonController',
+            'persons' => $persons,
+        ]);
+    }
+    #[Route('/detail/{id}', name: 'app_person_detail')]
+    public function detail(Person $person = null): Response
+    {
+        if(!$person) {
+            throw new NotFoundHttpException("La personne n'existe pas");
+        }
+        return $this->render('person/details.html.twig', [
+            'person' => $person,
         ]);
     }
 

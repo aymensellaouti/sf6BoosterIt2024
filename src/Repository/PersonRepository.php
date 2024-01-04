@@ -45,4 +45,14 @@ class PersonRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    public function statsAge($minAge, $maxAge): ?array
+    {
+        return $this->createQueryBuilder('p')
+            ->select('avg(p.age) as ageMoyen, count(p.id) as nombreDePersonne')
+            ->where('p.age >= :ageMin and p.age <= :ageMax')
+            ->setParameters(['ageMin'=> $minAge, 'ageMax' =>$maxAge])
+            ->getQuery()
+            ->getScalarResult()
+        ;
+    }
 }
