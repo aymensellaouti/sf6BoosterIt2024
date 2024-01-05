@@ -37,6 +37,9 @@ class Person
     #[ORM\ManyToMany(targetEntity: Hobby::class)]
     private Collection $hobbies;
 
+    #[ORM\Column(length: 255)]
+    private ?string $image = null;
+
 
 
     public function __construct()
@@ -117,6 +120,18 @@ class Person
     public function removeHobby(Hobby $hobby): static
     {
         $this->hobbies->removeElement($hobby);
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): static
+    {
+        $this->image = $image;
 
         return $this;
     }

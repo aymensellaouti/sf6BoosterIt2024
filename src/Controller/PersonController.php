@@ -6,10 +6,13 @@ use App\Entity\Person;
 use App\Form\PersonType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('person')]
 class PersonController extends AbstractController
@@ -66,7 +69,7 @@ class PersonController extends AbstractController
     }
 
     #[Route('/edit/{id?0}', name: 'app_person_add_form')]
-    public function addForm(Person $person = null, Request $request): Response
+    public function addForm(Person $person = null, Request $request,SluggerInterface $slugger): Response
     {
         if (!$person) {
             $person = new Person();
@@ -78,6 +81,32 @@ class PersonController extends AbstractController
 
           $form->handleRequest($request);
           if($form->isSubmitted()) {
+              /** @var UploadedFile $brochureFile */
+              $path = $form->get('image')->getData();
+              if ($path) {
+                  $directory = $this->getParameter('person_directory');
+                  // updates the 'image' property to store the image file name
+                  // instead of its contents
+                  $originalFilename = pathinfo($path->getClientOriginalName(), PATHINFO_FILENAME);
+                  // this is needed to safely include the file name as part of the URL
+                  $safeFilename = $slugger->slug($originalFilename);
+                  $newFilename = $safeFilename.'-'.uniqid().'.'.$path->guessExtension();
+
+                  // Move the file to the directory where brochures are stored
+                  try {
+                      $path->move(
+                          $this->getParameter('person_directory'),
+                          $newFilename
+                      );
+                  } catch (FileException $e) {
+                      // ... handle exception if something happens during file upload
+                  }
+
+                  // updates the 'image' property to store the image file name
+                  // instead of its contents
+                  $person->setImage($newFilename);
+              }
+
               $this->entityManager->persist($person);
               $this->entityManager->flush();
               return $this->redirectToRoute('app_person');
