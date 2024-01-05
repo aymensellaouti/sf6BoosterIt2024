@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Person;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -45,14 +46,54 @@ class PersonRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    /**
+     *
+     * Retourne l'age moyen et le nombre de personnes
+     * Dans un interval d'age passé en paramètre
+     *
+     * @param $minAge
+     * @param $maxAge
+     * @return array|null
+     */
     public function statsAge($minAge, $maxAge): ?array
     {
-        return $this->createQueryBuilder('p')
-            ->select('avg(p.age) as ageMoyen, count(p.id) as nombreDePersonne')
-            ->where('p.age >= :ageMin and p.age <= :ageMax')
-            ->setParameters(['ageMin'=> $minAge, 'ageMax' =>$maxAge])
+        $qb =  $this->createQueryBuilder('p')
+            ->select('avg(p.age) as ageMoyen, count(p.id) as nombreDePersonne');
+            return $this->gePersonsInAgeInterval($qb, $minAge, $maxAge)
             ->getQuery()
             ->getScalarResult()
         ;
+    }
+
+    /**
+     *
+     * Retourne la liste des personnes dont l'age appartient à l'interval passé en paramètre
+     *
+     * @param $minAge
+     * @param $maxAge
+     * @return array|null
+     */
+    public function getPersonsByAge($minAge, $maxAge): ?array
+    {
+            $qb =  $this->createQueryBuilder('p');
+            return $this->gePersonsInAgeInterval($qb, $minAge, $maxAge)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * Ajoute à notre QueryBuilder un where permettant de sélectionner les personnes
+     * Dans l'interval d'age passé en paramètre
+     *
+     * @param QueryBuilder $qb
+     * @param $minAge
+     * @param $maxAge
+     * @return QueryBuilder
+     */
+    private function gePersonsInAgeInterval(QueryBuilder $qb, $minAge, $maxAge): QueryBuilder {
+            return $qb->where('p.age >= :ageMin and p.age <= :ageMax')
+                      ->setParameters(['ageMin'=> $minAge, 'ageMax' =>$maxAge]);
     }
 }

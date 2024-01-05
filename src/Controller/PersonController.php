@@ -21,11 +21,11 @@ class PersonController extends AbstractController
 //        Récupération du répository pour les opérations de requétage de la base (read)
         $this->repository = $this->managerRegistry->getRepository(Person::class);
     }
-    #[Route('/list', name: 'app_person')]
-    public function index(): Response
+    #[Route('/list/{ageMin?0}/{ageMax?200}', name: 'app_person')]
+    public function index($ageMin, $ageMax): Response
     {
 //        Récupérer les personnes dans la base de données
-        $persons = $this->repository->findAll();
+        $persons = $this->repository->getPersonsByAge($ageMin, $ageMax);
         return $this->render('person/index.html.twig', [
             'persons' => $persons,
         ]);
@@ -93,5 +93,14 @@ class PersonController extends AbstractController
         $this->entityManager->flush();
         return new Response('<h1>Personne supprimé avec succès</h1>');
     }
+    #[Route('/stats/{ageMin?0}/{ageMax?200}', name: 'app_stats_person')]
+    public function stats($ageMin, $ageMax): Response
+    {
+//        Récupérer les personnes dans la base de données
+        $stats = $this->repository->statsAge($ageMin, $ageMax);
 
+        return $this->render('person/stats.html.twig', [
+            'stats' => $stats[0],
+        ]);
+    }
 }

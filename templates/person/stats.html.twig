@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+            <div class="card col-6 bg-primary m-2" style="width: 24rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Age Moyen</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ stats.ageMoyen | round(2) }}</h6>
+                </div>
+            </div>
+            <div class="card col-6 bg-warning m-2" style="width: 24rem;">
+                <div class="card-body ">
+                    <h5 class="card-title">nombreDePersonne</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ stats.nombreDePersonne }}</h6>
+                </div>
+            </div>
+    </div>
+
+{% endblock %}
+
+{% block title %}
+    Stats
+{% endblock %}
+
