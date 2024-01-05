@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[HasLifecycleCallbacks()]
 #[ORM\Entity(repositoryClass: PersonRepository::class)]
@@ -22,7 +23,11 @@ class Person
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
+    #[
+        ORM\Column(length: 50),
+        Assert\Length(min:3, minMessage: 'Veuillez saisir un nom avec au moins 3 caractères', max: 10, maxMessage: 'Veuillez renseigner un nom avec pas plus de 10 caractètres'),
+//        Assert\Regex(match: '')
+    ]
     private ?string $name = null;
 
     #[ORM\Column(length: 50)]

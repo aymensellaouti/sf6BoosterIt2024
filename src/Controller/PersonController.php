@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -80,7 +81,7 @@ class PersonController extends AbstractController
 //          $form->remove('updatedAt');
 
           $form->handleRequest($request);
-          if($form->isSubmitted()) {
+          if($form->isSubmitted() && $form->isValid()) {
               /** @var UploadedFile $brochureFile */
               $path = $form->get('image')->getData();
               if ($path) {
