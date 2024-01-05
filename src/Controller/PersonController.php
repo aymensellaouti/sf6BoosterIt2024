@@ -65,14 +65,16 @@ class PersonController extends AbstractController
         ]);
     }
 
-    #[Route('/add', name: 'app_person_add_form')]
-    public function addForm(Request $request): Response
+    #[Route('/edit/{id?0}', name: 'app_person_add_form')]
+    public function addForm(Person $person = null, Request $request): Response
     {
-          $person = new Person();
+        if (!$person) {
+            $person = new Person();
+        }
 //          1- Créer le formulaire
           $form = $this->createForm(PersonType::class, $person);
-          $form->remove('createdAt');
-          $form->remove('updatedAt');
+//          $form->remove('createdAt');
+//          $form->remove('updatedAt');
 
           $form->handleRequest($request);
           if($form->isSubmitted()) {

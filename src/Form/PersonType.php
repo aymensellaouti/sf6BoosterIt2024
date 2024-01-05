@@ -19,8 +19,8 @@ class PersonType extends AbstractType
             ->add('name')
             ->add('firstname')
             ->add('age')
-            ->add('createdAt')
-            ->add('updatedAt')
+//            ->add('createdAt')
+//            ->add('updatedAt')
             ->add('job', EntityType::class, [
                 'class' => Job::class,
                 'choice_label' => 'designation',
