@@ -3,11 +3,17 @@
 namespace App\Entity;
 
 use App\Repository\JobRepository;
+use App\Traits\TimestampTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 
+#[HasLifecycleCallbacks()]
 #[ORM\Entity(repositoryClass: JobRepository::class)]
 class Job
 {
+
+    use TimestampTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

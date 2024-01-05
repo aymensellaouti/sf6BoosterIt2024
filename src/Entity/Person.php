@@ -3,14 +3,20 @@
 namespace App\Entity;
 
 use App\Repository\PersonRepository;
+use App\Traits\TimestampTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 
+#[HasLifecycleCallbacks()]
 #[ORM\Entity(repositoryClass: PersonRepository::class)]
 class Person
 {
+
+    use TimestampTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -30,6 +36,8 @@ class Person
 
     #[ORM\ManyToMany(targetEntity: Hobby::class)]
     private Collection $hobbies;
+
+
 
     public function __construct()
     {
@@ -112,4 +120,7 @@ class Person
 
         return $this;
     }
+
+
+
 }

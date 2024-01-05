@@ -6,12 +6,12 @@ use App\Entity\Hobby;
 use App\Entity\Job;
 use App\Entity\Person;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
-
-;
-
-class PersonFixture extends Fixture
+#[HasLifecycleCallbacks()]
+class PersonFixture extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
@@ -28,11 +28,19 @@ class PersonFixture extends Fixture
          $person->setJob($jobs[$i % count($jobs)]);
 //         Ajoute un job à cette personne
          for ($j=$i; $j < $i+3; $j++) {
-             $person->addHobby($hobbies[$j]);
+             $person->addHobby($hobbies[$j % count($hobbies)]);
          }
          $person->setJob($jobs[$i % count($jobs)]);
          $manager->persist($person);
         }
         $manager->flush();
+    }
+
+    public function getDependencies()
+    {
+        return [
+            JobFixture::class,
+            HobbyFixture::class
+        ];
     }
 }
