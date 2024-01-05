@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Person;
+use App\Form\PersonType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -61,6 +63,27 @@ class PersonController extends AbstractController
         return $this->render('person/details.html.twig', [
             'person' => $person,
         ]);
+    }
+
+    #[Route('/add', name: 'app_person_add_form')]
+    public function addForm(Request $request): Response
+    {
+          $person = new Person();
+//          1- Créer le formulaire
+          $form = $this->createForm(PersonType::class, $person);
+          $form->remove('createdAt');
+          $form->remove('updatedAt');
+
+          $form->handleRequest($request);
+          if($form->isSubmitted()) {
+              $this->entityManager->persist($person);
+              $this->entityManager->flush();
+              return $this->redirectToRoute('app_person');
+          } else {
+              return $this->render('person/addForm.html.twig', [
+                  'form' => $form->createView(),
+              ]);
+          }
     }
 
     #[Route('/update/{person}/{name}/{firstname}/{age}', name: 'app_person_update')]

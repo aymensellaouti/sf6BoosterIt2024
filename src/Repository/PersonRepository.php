@@ -78,6 +78,7 @@ class PersonRepository extends ServiceEntityRepository
     {
             $qb =  $this->createQueryBuilder('p');
             return $this->gePersonsInAgeInterval($qb, $minAge, $maxAge)
+            ->orderBy('p.id', 'desc')
             ->getQuery()
             ->getResult()
             ;

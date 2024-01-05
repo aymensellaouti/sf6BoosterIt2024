@@ -7,6 +7,7 @@ use App\Traits\TimestampTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 
+// Informe doctrine qu'on a besoin qu'il gérer le cycle de vie de l'entity
 #[HasLifecycleCallbacks()]
 #[ORM\Entity(repositoryClass: JobRepository::class)]
 class Job
