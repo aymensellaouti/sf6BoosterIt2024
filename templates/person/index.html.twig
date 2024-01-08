@@ -11,7 +11,10 @@
                     <h6 class="card-subtitle mb-2 text-muted">{{ person.firstname }} {{ person.name }}</h6>
                     <p class="card-text"> Vous avez {{ person.age }}</p>
                     <a href="{{path('app_person_detail', {id: person.id})}}" class="card-link">Details</a>
-                    <a href="{{ path('app_person_delete', {id: person.id}) }}" class="card-link">Supprimer</a>
+                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                        <a href="{{ path('app_person_delete', {id: person.id}) }}" class="card-link">Supprimer</a>
+                        <a href="{{ path('app_person_add_form', {id: person.id}) }}" class="card-link">Modifier</a>
+                    {% endif%}
                 </div>
             </div>
         {% endfor %}

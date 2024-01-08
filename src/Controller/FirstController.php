@@ -16,6 +16,10 @@ class FirstController extends AbstractController
         $randomMessage = $firstService->getRandomString(10);
         return new Response("<h1>Bonjour BoosterIT, voila une chaine aléatoire : $randomMessage</h1>");
     }
+    #[Route('/unauthorized', name: 'app_unauthorized')]
+    public function unauthorized(): Response {
+        return $this->render("unauthorized.html.twig");
+    }
 
     #[Route("/first", name: 'app_first')]
     public function first(): Response {

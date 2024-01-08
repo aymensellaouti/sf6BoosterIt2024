@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Vous devez être authentifié pour accéder à cette ressource</h1>
+    <h2><a href="{{ path('app_login') }}">Cliquez ici pour vous authentifier</a></h2>
+{% endblock %}
+
+{% block title %}
+    Unauthorized
+{% endblock %}
+

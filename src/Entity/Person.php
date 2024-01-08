@@ -42,7 +42,7 @@ class Person
     #[ORM\ManyToMany(targetEntity: Hobby::class)]
     private Collection $hobbies;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
     #[ORM\ManyToOne]

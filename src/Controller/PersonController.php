@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Person;
+use App\Entity\User;
 use App\Form\PersonType;
 use App\Service\UploadService;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,6 +33,7 @@ class PersonController extends AbstractController
     #[Route('/list/{ageMin?0}/{ageMax?200}', name: 'app_person')]
     public function index($ageMin, $ageMax): Response
     {
+//        dd($this->getUser());
 //        Récupérer les personnes dans la base de données
         $persons = $this->repository->getPersonsByAge($ageMin, $ageMax);
         return $this->render('person/index.html.twig', [
@@ -73,8 +76,18 @@ class PersonController extends AbstractController
     #[Route('/edit/{id?0}', name: 'app_person_add_form')]
     public function addForm(Person $person = null, Request $request, UploadService $uploadService): Response
     {
+        $new = false;
         if (!$person) {
             $person = new Person();
+            $new = true;
+        }
+
+        if (!$new) {
+            if (!$person->getCreatedBy())
+                $this->denyAccessUnlessGranted('ROLE_ADMIN');
+            else if($person->getCreatedBy() != $this->getUser() ) {
+                throw new AccessDeniedException("Vous n'avez pas le droit d'éditer cette ressource");
+            }
         }
 //          1- Créer le formulaire
           $form = $this->createForm(PersonType::class, $person);
@@ -83,6 +96,11 @@ class PersonController extends AbstractController
           $form->handleRequest($request);
           if($form->isSubmitted() && $form->isValid()) {
               /** @var UploadedFile $path */
+              /** @var User $user */
+              $user = $this->getUser();
+              if ($user && $new) {
+                  $person->setCreatedBy($user);
+              }
               $path = $form->get('image')->getData();
               if ($path) {
                   $directory = $this->getParameter('person_directory');
