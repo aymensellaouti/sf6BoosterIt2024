@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Person;
 use App\Form\PersonType;
+use App\Service\UploadService;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -70,7 +71,7 @@ class PersonController extends AbstractController
     }
 
     #[Route('/edit/{id?0}', name: 'app_person_add_form')]
-    public function addForm(Person $person = null, Request $request,SluggerInterface $slugger): Response
+    public function addForm(Person $person = null, Request $request, UploadService $uploadService): Response
     {
         if (!$person) {
             $person = new Person();
@@ -79,32 +80,13 @@ class PersonController extends AbstractController
           $form = $this->createForm(PersonType::class, $person);
 //          $form->remove('createdAt');
 //          $form->remove('updatedAt');
-
           $form->handleRequest($request);
           if($form->isSubmitted() && $form->isValid()) {
-              /** @var UploadedFile $brochureFile */
+              /** @var UploadedFile $path */
               $path = $form->get('image')->getData();
               if ($path) {
                   $directory = $this->getParameter('person_directory');
-                  // updates the 'image' property to store the image file name
-                  // instead of its contents
-                  $originalFilename = pathinfo($path->getClientOriginalName(), PATHINFO_FILENAME);
-                  // this is needed to safely include the file name as part of the URL
-                  $safeFilename = $slugger->slug($originalFilename);
-                  $newFilename = $safeFilename.'-'.uniqid().'.'.$path->guessExtension();
-
-                  // Move the file to the directory where brochures are stored
-                  try {
-                      $path->move(
-                          $this->getParameter('person_directory'),
-                          $newFilename
-                      );
-                  } catch (FileException $e) {
-                      // ... handle exception if something happens during file upload
-                  }
-
-                  // updates the 'image' property to store the image file name
-                  // instead of its contents
+                  $newFilename = $uploadService->uploadFile($path, $directory);
                   $person->setImage($newFilename);
               }
 
