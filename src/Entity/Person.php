@@ -45,6 +45,9 @@ class Person
     #[ORM\Column(length: 255)]
     private ?string $image = null;
 
+    #[ORM\ManyToOne]
+    private ?User $createdBy = null;
+
 
 
     public function __construct()
@@ -137,6 +140,18 @@ class Person
     public function setImage(string $image): static
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): static
+    {
+        $this->createdBy = $createdBy;
 
         return $this;
     }
